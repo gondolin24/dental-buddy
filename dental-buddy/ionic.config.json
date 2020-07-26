@@ -1,0 +1,7 @@
+{
+  "name": "dental-buddy",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
