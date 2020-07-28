@@ -1,19 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import './MainScreen.css';
 
 
-import {
-    IonButton,
-    IonContent,
-    IonHeader,
-    IonItem,
-    IonLabel,
-    IonList,
-    IonPage,
-    IonTitle,
-    IonToggle,
-    IonToolbar
-} from '@ionic/react';
+import {IonButton, IonContent, IonItem, IonLabel, IonList, IonPage, IonToggle} from '@ionic/react';
 import Countdown, {zeroPad} from "react-countdown";
 import {getNumberOfSeconds} from "../../utils/Time-Utils";
 import {Stages} from "../../enum/Stages";
@@ -94,6 +83,9 @@ const MainScreen: React.FC = () => {
                             const pd = progressData
                             pd[stage] = true
                             setProgressData(pd)
+                            if (stage === Stages.WASH) {
+                                setProgressData(getEmptyProgressData())
+                            }
                         }}
                         renderer={renderer}
                     />
@@ -103,7 +95,7 @@ const MainScreen: React.FC = () => {
                     stage === Stages.BRUSH &&
                     <IonButton expand="full" shape="round" fill="outline"
                                onClick={() => {
-                                   setBrushTimer(Date.now() + getNumberOfSeconds(5))
+                                   setBrushTimer(Date.now() + getNumberOfSeconds(121))
                                    setStartTimer(true)
                                }}
                     >Start brushing teeth</IonButton>
@@ -115,7 +107,7 @@ const MainScreen: React.FC = () => {
                     <IonButton expand="full" shape="round" fill="outline"
                                onClick={() => {
                                    console.log('derp')
-                                   setBrushTimer(Date.now() + getNumberOfSeconds(5))
+                                   setBrushTimer(Date.now() + getNumberOfSeconds(60))
                                    setStartTimer(true)
                                }}
                     >Start flossing teeth</IonButton>
@@ -126,7 +118,7 @@ const MainScreen: React.FC = () => {
 
                     <IonButton expand="full" shape="round" fill="outline"
                                onClick={() => {
-                                   setBrushTimer(Date.now() + getNumberOfSeconds(5))
+                                   setBrushTimer(Date.now() + getNumberOfSeconds(31))
                                    setStartTimer(true)
                                }}
                     >Start mouth wash</IonButton>
