@@ -5,3 +5,18 @@
 /*    --handle-background: #7a49a5;*/
 /*    --handle-background-checked: #000;*/
 /*}*/
+
+.home-animation {
+    height: 300px;
+    margin-left: 10px;
+    margin-right: 10px;
+
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    background: #ff5b71;
+    align-content: center;
+}

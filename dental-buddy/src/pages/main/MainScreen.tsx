@@ -2,12 +2,24 @@ import React, {useState} from 'react';
 import './MainScreen.css';
 
 
-import {IonButton, IonContent, IonItem, IonLabel, IonList, IonPage, IonToggle} from '@ionic/react';
+import {
+    IonAvatar,
+    IonButton,
+    IonContent,
+    IonHeader,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonPage, IonTitle,
+    IonToggle,
+    IonToolbar
+} from '@ionic/react';
 import Countdown, {zeroPad} from "react-countdown";
 import {getNumberOfSeconds} from "../../utils/Time-Utils";
 import {Stages} from "../../enum/Stages";
 import LottiePlayer from "../../components/lottie/LottiePlayer";
 import {getBrushingTeeth} from "../../services/LottieService";
+import FlossingProgress from "../../components/progress/FlossingProgress";
 
 function getComplete(complete: boolean) {
     return (complete) ? 'Complete' : 'Todo'
@@ -53,7 +65,10 @@ const MainScreen: React.FC = () => {
     const renderer = ({minutes, seconds}) => {
         return (
             <span>
-        {zeroPad(minutes)}:{zeroPad(seconds)}
+                        <IonTitle>
+             {zeroPad(minutes)}:{zeroPad(seconds)}
+
+                        </IonTitle>
       </span>
         );
     };
@@ -61,35 +76,36 @@ const MainScreen: React.FC = () => {
 
     return (
         <IonPage>
-            {/*<IonHeader>*/}
-            {/*    <IonToolbar>*/}
-            {/*        <IonTitle>Derp</IonTitle>*/}
-            {/*    </IonToolbar>*/}
-            {/*</IonHeader>*/}
-            <IonContent>
+            <IonHeader>
+                <IonToolbar>
 
-                {
-                    startTimer &&
+                    {
+                        startTimer &&
 
-                    <Countdown
-                        date={brushTimer}
-                        precision={3}
-                        autoStart={startTimer}
-                        onComplete={() => {
-                            setStartTimer(false)
-                            const newNextStage = getNextStage(nextStage)
-                            setStage(nextStage)
-                            setNextStage(newNextStage)
-                            const pd = progressData
-                            pd[stage] = true
-                            setProgressData(pd)
-                            if (stage === Stages.WASH) {
-                                setProgressData(getEmptyProgressData())
-                            }
-                        }}
-                        renderer={renderer}
-                    />
-                }
+                        <Countdown
+                            date={brushTimer}
+                            precision={3}
+                            autoStart={startTimer}
+                            onComplete={() => {
+                                setStartTimer(false)
+                                const newNextStage = getNextStage(nextStage)
+                                setStage(nextStage)
+                                setNextStage(newNextStage)
+                                const pd = progressData
+                                pd[stage] = true
+                                setProgressData(pd)
+                                if (stage === Stages.WASH) {
+                                    setProgressData(getEmptyProgressData())
+                                }
+                            }}
+                            renderer={renderer}
+                        />
+                    }
+
+                </IonToolbar>
+            </IonHeader>
+            <IonContent scrollX={false} scrollY={false}>
+
 
                 {
                     stage === Stages.BRUSH &&
@@ -126,10 +142,7 @@ const MainScreen: React.FC = () => {
 
                 <IonList>
 
-                    <IonItem>
-                        <IonLabel>Brushed teeth : {getComplete(progressData[Stages.BRUSH])} </IonLabel>
-                        <IonToggle slot={"start"} checked={progressData[Stages.BRUSH]}/>
-                    </IonItem>
+                    <FlossingProgress/>
 
                     <IonItem>
                         <IonLabel>Flossed : {getComplete(progressData[Stages.FLOSS])} </IonLabel>
@@ -142,7 +155,10 @@ const MainScreen: React.FC = () => {
                     </IonItem>
 
                 </IonList>
-                <LottiePlayer source={getBrushingTeeth()} animationDefault={true}/>
+                <div className={'home-animation'}>
+                    <LottiePlayer source={getBrushingTeeth()} animationDefault={true}/>
+
+                </div>
             </IonContent>
         </IonPage>
     );

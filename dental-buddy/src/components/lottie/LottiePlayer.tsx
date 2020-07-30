@@ -15,7 +15,7 @@ const LottiePlayer: React.FC <LottieInterFace>= (props) => {
         autoplay: true,
         animationData: anData,
         rendererSettings: {
-            preserveAspectRatio: "xMidYMid slice"
+            preserveAspectRatio: "xMidYMid meet"
         }
     };
     return (
