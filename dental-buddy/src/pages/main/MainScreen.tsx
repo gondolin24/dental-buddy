@@ -15,12 +15,12 @@ import {
 } from '@ionic/react';
 import Countdown, {zeroPad} from "react-countdown";
 import {getNumberOfSeconds} from "../../utils/Time-Utils";
-import {Stages} from "../../enum/Stages";
 import LottiePlayer from "../../components/lottie/LottiePlayer";
 import {getBrushingTeeth, getCleanTeeth} from "../../services/LottieService";
 import FlossingProgress from "../../components/progress/FlossingProgress";
 import MouthWashProgress from "../../components/progress/MouthWashProgress";
 import BrushingProgress from "../../components/progress/BrushingProgress";
+import {Vibration} from "@ionic-native/vibration";
 
 function getTimer(stage: number) {
 
@@ -109,6 +109,7 @@ const MainScreen: React.FC = () => {
                             precision={3}
                             autoStart={startTimer}
                             onComplete={() => {
+                                Vibration.vibrate([2000,1000,2000]);
                                 setStartTimer(false)
                                 setStageComplete(true)
                                 setButtonLabel(getProgressLabel(flowStage))
