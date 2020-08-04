@@ -12,15 +12,19 @@ interface ProgressProps {
 const MouthWashProgress: React.FC<ProgressProps> = (props) => {
 
     const [avatar, setAvatar] = useState(<img src={require('../../pics/non-complete.gif')}/>)
+    const [status, setStatus] = useState('TODO')
 
     useEffect(() => {
         //hard reset
         if (props.reset) {
             setAvatar(<img src={require('../../pics/non-complete.gif')}/>)
+            setStatus('TODO')
+
         }
 
             const actual = props.stageFlow - 1
             if (actual === 3 && props.stageComplete) {
+                setStatus('COMPLETE')
                 setAvatar(<img src={require('../../pics/complete.png')}/>)
             }
         }, [props.stageFlow, props.stageComplete, props.reset]
@@ -30,7 +34,7 @@ const MouthWashProgress: React.FC<ProgressProps> = (props) => {
             <IonAvatar slot="start" className={'not-complete'}>
                 {avatar}
             </IonAvatar>
-            <IonLabel>Mouth Wash</IonLabel>
+            <IonLabel>Mouth Wash: {status}</IonLabel>
         </IonItem>
 
     );

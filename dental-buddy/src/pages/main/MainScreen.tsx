@@ -26,11 +26,13 @@ function getTimer(stage: number) {
 
     switch (stage) {
         case 1:
-            return 2
+            return 121
         case 2:
-            return 3
+            return 61
+        case 3:
+            return 31
         default:
-            return 2
+            return 121
     }
 
 }
@@ -47,8 +49,22 @@ function getProgressLabel(stage: number) {
         default:
             return 'Start Brushing Teeth'
     }
-
 }
+
+function getProgressLabelButton(stage: number) {
+
+    switch (stage) {
+        case 1:
+            return 'Brushing'
+        case 2:
+            return 'Flossing'
+        case 3:
+            return 'Start'
+        default:
+            return 'Brushing'
+    }
+}
+
 
 const MainScreen: React.FC = () => {
 
@@ -63,12 +79,11 @@ const MainScreen: React.FC = () => {
 
     useEffect(() => {
         if (startTimer) {
-            setButtonLabel('Restart')
-            setBrushTimer(Date.now() + getNumberOfSeconds(getTimer(flowStage)))
+            setButtonLabel(`${getProgressLabelButton(flowStage - 1)} In Progress`)
+            setBrushTimer(Date.now() + getNumberOfSeconds(getTimer(flowStage - 1)))
         }
         if (reset) {
             setFlowStage(1)
-
         }
     }, [flowStage, reset])
 
@@ -107,7 +122,7 @@ const MainScreen: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent scrollX={false} scrollY={false}>
-                <IonButton expand="full" shape="round" fill="outline" onClick={() => {
+                <IonButton expand="full" shape="round" fill="outline" disabled={startTimer} onClick={() => {
                     setStartTimer(true)
                     setFlowStage(flowStage + 1)
                     setStageComplete(false)
