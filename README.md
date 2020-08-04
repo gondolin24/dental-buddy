@@ -1,4 +1,4 @@
-## Detnal buddy
+## Dental buddy
 
 ![Test Image 1](banner.png)
 
