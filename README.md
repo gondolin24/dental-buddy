@@ -1,5 +1,8 @@
 ## Detnal buddy
 
+![Test Image 1](banner.png)
+
+
 privacy policy:
 None
 
@@ -9,11 +12,7 @@ Stack:
 * Ionic 4 (react)
 * typescript
 
-Main features will me
-* toggle (dropdown for morning or evening)
-* maybe an alert
-* calender to track progress
-* maybe some rewards
-* timer for teeth brushing
-* some toggle for flossing
+Main features 
+
+* timer for teeth brushing, flossing and mouth wash
 * maybe a cool animation while timer goes on
