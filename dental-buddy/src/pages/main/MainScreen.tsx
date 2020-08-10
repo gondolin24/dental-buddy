@@ -6,10 +6,10 @@ import {
     IonButton,
     IonContent,
     IonHeader,
-    IonItem, IonLabel,
-    IonList,
+    IonItem, IonItemDivider, IonLabel,
+    IonList, IonListHeader,
     IonPage,
-    IonPopover,
+    IonPopover, IonSelect, IonSelectOption,
     IonTitle,
     IonToolbar
 } from '@ionic/react';
@@ -75,7 +75,7 @@ const MainScreen: React.FC = () => {
     const [stageComplete, setStageComplete] = useState(false)
     const [showPopover, setShowPopover] = useState(false);
     const [reset, setReset] = useState(true);
-
+    const [timeOfDay, setTimeOfDay] = useState<string>('morning');
 
     useEffect(() => {
         if (startTimer) {
@@ -90,11 +90,7 @@ const MainScreen: React.FC = () => {
     // @ts-ignore
     const renderer = ({minutes, seconds}) => {
         return (
-            <span>
-    <IonTitle>
-      {zeroPad(minutes)}:{zeroPad(seconds)}
-    </IonTitle>
-   </span>
+            <IonLabel> {zeroPad(minutes)}:{zeroPad(seconds)}</IonLabel>
         );
     };
 
@@ -102,24 +98,37 @@ const MainScreen: React.FC = () => {
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    {
-                        startTimer &&
-                        <Countdown
-                            date={brushTimer}
-                            precision={3}
-                            autoStart={startTimer}
-                            onComplete={() => {
-                                Vibration.vibrate([2000,1000,2000]);
-                                setStartTimer(false)
-                                setStageComplete(true)
-                                setButtonLabel(getProgressLabel(flowStage))
-                                if (flowStage > 3) {
-                                    setShowPopover(true)
-                                }
-                            }}
-                            renderer={renderer}
-                        />
-                    }
+                    <IonTitle>
+                        <IonItem>
+
+                            {
+                                startTimer &&
+
+                                <Countdown
+                                    date={brushTimer}
+                                    precision={3}
+                                    autoStart={startTimer}
+                                    onComplete={() => {
+                                        Vibration.vibrate([2000, 1000, 2000]);
+                                        setStartTimer(false)
+                                        setStageComplete(true)
+                                        setButtonLabel(getProgressLabel(flowStage))
+                                        if (flowStage > 3) {
+                                            setShowPopover(true)
+                                        }
+                                    }}
+                                    renderer={renderer}
+                                />
+
+                            }
+                            <IonSelect value={timeOfDay} okText="Okay" slot={'start'} cancelText="Dismiss"
+                                       onIonChange={e => setTimeOfDay(e.detail.value)}>
+                                <IonSelectOption value="morning">Morning</IonSelectOption>
+                                <IonSelectOption value="night">Night</IonSelectOption>
+                            </IonSelect>
+                        </IonItem>
+                    </IonTitle>
+
                 </IonToolbar>
             </IonHeader>
             <IonContent scrollX={false} scrollY={false}>
@@ -129,6 +138,7 @@ const MainScreen: React.FC = () => {
                     setStageComplete(false)
                     setReset(false)
                 }}>{buttonLabel}</IonButton>
+
 
                 <IonList>
                     <BrushingProgress stageComplete={stageComplete} stageFlow={flowStage} reset={reset}/>
