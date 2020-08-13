@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Redirect, Route} from 'react-router-dom';
 import {IonApp, IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs} from '@ionic/react';
 import {IonReactRouter} from '@ionic/react-router';
@@ -21,30 +21,70 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import MainScreen from "./pages/main/MainScreen";
 import HistoryTab from "./components/tracking/HistoryTab";
+import {Plugins} from "@capacitor/core";
+import {AppMetaData} from "./models/AppMetaData";
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route path="/tab1" component={MainScreen} exact={true} />
-          <Route path="/tab2" component={HistoryTab} exact={true} />
-          <Route path="/tab3" component={Tab3} />
-          <Route path="/" render={() => <Redirect to="/tab1" />} exact={true} />
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/tab1">
-            <IonIcon icon={time} />
-            <IonLabel>Teeth Brushing</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2">
-            <IonIcon icon={ellipse} />
-            <IonLabel>Tracking</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
-);
+import _ from "lodash"
+
+const {Storage} = Plugins
+
+
+const App: React.FC = () => {
+
+    const [appMetaData, setAppMetaData] = useState(new AppMetaData())
+    const [inital, setInitial] = useState(true);
+
+    useEffect(() => {
+        Storage.get({key: 'metaData'}).then((result) => {
+            const val: string = _.get(result, 'value') || '{}'
+            const parsed = JSON.parse(val)
+            if ((_.get(parsed, 'metaData')) && (inital)) {
+                const json = _.get(parsed, 'metaData')
+                const metaData = AppMetaData.fromJson(json)
+                setAppMetaData(metaData)
+                setInitial(false)
+            }
+        }).catch((e) => {
+            console.log(e)
+        })
+    }, [inital])
+
+    const saveData = async (data: any) => {
+        await Storage.set({
+            key: 'AppMetaData',
+            value: JSON.stringify(data)
+        })
+    }
+    const setChildMetaData = (val: AppMetaData) => {
+        setAppMetaData(val)
+        const json = appMetaData.toJson()
+        saveData(json).then().catch()
+    }
+
+    return (
+        <IonApp>
+            <IonReactRouter>
+                <IonTabs>
+                    <IonRouterOutlet>
+                        <Route path="/tab1" component={MainScreen} exact={true}/>
+                        <Route path="/tab2" component={HistoryTab} exact={true}/>
+                        <Route path="/tab3" component={Tab3}/>
+                        <Route path="/" render={() => <Redirect to="/tab1"/>} exact={true}/>
+                    </IonRouterOutlet>
+                    <IonTabBar slot="bottom">
+                        <IonTabButton tab="tab1" href="/tab1">
+                            <IonIcon icon={time}/>
+                            <IonLabel>Teeth Brushing</IonLabel>
+                        </IonTabButton>
+                        <IonTabButton tab="tab2" href="/tab2">
+                            <IonIcon icon={ellipse}/>
+                            <IonLabel>Tracking</IonLabel>
+                        </IonTabButton>
+                    </IonTabBar>
+                </IonTabs>
+            </IonReactRouter>
+        </IonApp>
+    );
+}
 
 export default App;

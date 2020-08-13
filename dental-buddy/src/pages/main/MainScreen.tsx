@@ -100,7 +100,6 @@ const MainScreen: React.FC = () => {
                 <IonToolbar>
                     <IonTitle>
                         <IonItem>
-
                             {
                                 startTimer &&
 
