@@ -3,15 +3,15 @@ import {DailyHistory} from "./DailyHistory";
 
 export class AppMetaData implements SerializableModel {
 
-    dailyHistoryList: Array<DailyHistory>
+    dailyHistoryMap: {}
 
-    constructor(dailyHistoryList: DailyHistory[] = []) {
-        this.dailyHistoryList = dailyHistoryList
+    constructor(dailyHistoryMap: {} = {}) {
+        this.dailyHistoryMap = dailyHistoryMap
     }
 
     toJson(): any {
         return {
-            dailyHistoryList: this.dailyHistoryList,
+            dailyHistoryMap: this.dailyHistoryMap,
         }
     }
 
@@ -20,8 +20,8 @@ export class AppMetaData implements SerializableModel {
             return new AppMetaData()
         }
 
-        const dailyHistoryList = schema.dailyHistoryList || []
-        return new AppMetaData(dailyHistoryList)
+        const dailyHistoryMap = schema.dailyHistoryMap || {}
+        return new AppMetaData(dailyHistoryMap)
 
     }
 }
