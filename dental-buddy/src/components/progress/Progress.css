@@ -1,3 +1,6 @@
 .not-complete{
     background: red;
 }
+.complete{
+    background: green;
+}

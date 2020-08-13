@@ -10,7 +10,7 @@ import {
     IonTitle,
     IonToolbar
 } from "@ionic/react";
-
+import {getCurrentDate} from "../../utils/Time-Utils";
 
 const HistoryTab: React.FC = () => {
     return (
@@ -23,12 +23,11 @@ const HistoryTab: React.FC = () => {
             <IonContent>
                 <IonList>
                     <IonItem>
-                        <IonLabel>Monday</IonLabel>
+                        <IonLabel>{getCurrentDate()}</IonLabel>
+                        <IonAvatar slot="end" className={'complete'}>
+                            <img src={require('../../pics/complete-cow.png')}/></IonAvatar>
                         <IonAvatar slot="end" className={'not-complete'}>
-
-                        </IonAvatar>
-                        <IonAvatar slot="end" className={'not-complete'}>
-
+                            <img src={require('../../pics/non-complete-cow.png')}/>
                         </IonAvatar>
                     </IonItem>
                 </IonList>
