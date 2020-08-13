@@ -31,13 +31,13 @@ function getTimer(stage: number) {
 
     switch (stage) {
         case 1:
-            return 2
+            return 121
         case 2:
-            return 2
+            return 61
         case 3:
-            return 2
+            return 31
         default:
-            return 2
+            return 121
     }
 
 }
