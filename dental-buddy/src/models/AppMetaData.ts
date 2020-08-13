@@ -1,17 +1,20 @@
 import {SerializableModel} from "./SerializableModel";
-import {DailyHistory} from "./DailyHistory";
+import {getCurrentDate} from "../utils/Time-Utils";
 
 export class AppMetaData implements SerializableModel {
 
     dailyHistoryMap: {}
+    lastLogin: string
 
-    constructor(dailyHistoryMap: {} = {}) {
+    constructor(dailyHistoryMap: {} = {}, lastLogin: string = getCurrentDate()) {
         this.dailyHistoryMap = dailyHistoryMap
+        this.lastLogin = lastLogin
     }
 
     toJson(): any {
         return {
             dailyHistoryMap: this.dailyHistoryMap,
+            lastLogin: this.lastLogin
         }
     }
 
@@ -21,7 +24,8 @@ export class AppMetaData implements SerializableModel {
         }
 
         const dailyHistoryMap = schema.dailyHistoryMap || {}
-        return new AppMetaData(dailyHistoryMap)
+        const lastLogin = schema.lastLogin || getCurrentDate()
+        return new AppMetaData(dailyHistoryMap, lastLogin)
 
     }
 }

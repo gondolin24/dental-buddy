@@ -8,3 +8,8 @@ export function getCurrentDate() {
     const currentMoment = moment()
     return currentMoment.format('LL')
 }
+
+export function getCurrentDateKey() {
+    const currentMoment = moment()
+    return currentMoment.format('LL').split(' ').join('')
+}
