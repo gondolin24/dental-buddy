@@ -6,33 +6,38 @@ import {
     IonButton,
     IonContent,
     IonHeader,
-    IonItem, IonItemDivider, IonLabel,
-    IonList, IonListHeader,
+    IonItem,
+    IonLabel,
+    IonList,
     IonPage,
-    IonPopover, IonSelect, IonSelectOption,
+    IonPopover,
+    IonSelect,
+    IonSelectOption,
     IonTitle,
     IonToolbar
 } from '@ionic/react';
 import Countdown, {zeroPad} from "react-countdown";
-import {getNumberOfSeconds} from "../../utils/Time-Utils";
+import {getCurrentDateKey, getNumberOfSeconds} from "../../utils/Time-Utils";
 import LottiePlayer from "../../components/lottie/LottiePlayer";
 import {getBrushingTeeth, getCleanTeeth} from "../../services/LottieService";
 import FlossingProgress from "../../components/progress/FlossingProgress";
 import MouthWashProgress from "../../components/progress/MouthWashProgress";
 import BrushingProgress from "../../components/progress/BrushingProgress";
 import {Vibration} from "@ionic-native/vibration";
+import {AppMetaData} from "../../models/AppMetaData";
+import {DailyHistory} from "../../models/DailyHistory";
 
 function getTimer(stage: number) {
 
     switch (stage) {
         case 1:
-            return 121
+            return 2
         case 2:
-            return 61
+            return 2
         case 3:
-            return 31
+            return 2
         default:
-            return 121
+            return 2
     }
 
 }
@@ -66,7 +71,12 @@ function getProgressLabelButton(stage: number) {
 }
 
 
-const MainScreen: React.FC = () => {
+interface MainProps {
+    metaData: AppMetaData
+    setMetaData: (val: any) => void
+}
+
+const MainScreen: React.FC<MainProps> = (props) => {
 
     const [startTimer, setStartTimer] = useState(false)
     const [brushTimer, setBrushTimer] = useState(Date.now())
@@ -151,6 +161,20 @@ const MainScreen: React.FC = () => {
                 <IonPopover
                     isOpen={showPopover}
                     onDidDismiss={e => {
+                        const time = timeOfDay
+                        const dataKey = getCurrentDateKey()
+                        const dd = props.metaData
+                      console.log(dd)
+                        // @ts-ignore
+                        const data: DailyHistory = dd.dailyHistoryMap[dataKey]
+                        if (time === 'night') {
+                            data.night = true
+                        } else {
+                            data.day = true
+                        }
+                        // @ts-ignore
+                        dd.dailyHistoryMap[dataKey] = data
+                        props.setMetaData(dd)
                         setShowPopover(false)
                         setReset(true)
                     }}

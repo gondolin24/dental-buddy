@@ -25,6 +25,8 @@ import {Plugins} from "@capacitor/core";
 import {AppMetaData} from "./models/AppMetaData";
 
 import _ from "lodash"
+import {getCurrentDate, getCurrentDateKey} from "./utils/Time-Utils";
+import {DailyHistory} from "./models/DailyHistory";
 
 const {Storage} = Plugins
 
@@ -38,9 +40,22 @@ const App: React.FC = () => {
         Storage.get({key: 'metaData'}).then((result) => {
             const val: string = _.get(result, 'value') || '{}'
             const parsed = JSON.parse(val)
+
             if ((_.get(parsed, 'metaData')) && (inital)) {
                 const json = _.get(parsed, 'metaData')
                 const metaData = AppMetaData.fromJson(json)
+
+                const lastLoginDate = getCurrentDate()
+                const currentDateKey = getCurrentDateKey()
+                // @ts-ignore
+                const currentDate: any = metaData.dailyHistoryMap[currentDateKey]
+
+                if (currentDate === undefined || currentDate === null) {
+                    // @ts-ignore
+                    metaData.dailyHistoryMap[currentDateKey] = new DailyHistory(lastLoginDate, false, false)
+                }
+                metaData.lastLogin = lastLoginDate
+
                 setAppMetaData(metaData)
                 setInitial(false)
             }
@@ -51,11 +66,12 @@ const App: React.FC = () => {
 
     const saveData = async (data: any) => {
         await Storage.set({
-            key: 'AppMetaData',
+            key: 'metaData',
             value: JSON.stringify(data)
         })
     }
     const setChildMetaData = (val: AppMetaData) => {
+       val.changeData = !val.changeData
         setAppMetaData(val)
         const json = appMetaData.toJson()
         saveData(json).then().catch()
@@ -66,8 +82,10 @@ const App: React.FC = () => {
             <IonReactRouter>
                 <IonTabs>
                     <IonRouterOutlet>
-                        <Route path="/tab1" component={MainScreen} exact={true}/>
-                        <Route path="/tab2" component={HistoryTab} exact={true}/>
+                        <Route path="/tab1"
+                               component={() => (<MainScreen metaData={appMetaData} setMetaData={setChildMetaData}/>)}
+                               exact={true}/>
+                        <Route path="/tab2" component={() => (<HistoryTab metaData={appMetaData}/>)} exact={true}/>
                         <Route path="/tab3" component={Tab3}/>
                         <Route path="/" render={() => <Redirect to="/tab1"/>} exact={true}/>
                     </IonRouterOutlet>

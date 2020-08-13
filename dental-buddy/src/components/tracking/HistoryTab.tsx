@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     IonAvatar,
     IonContent,
@@ -10,8 +10,8 @@ import {
     IonTitle,
     IonToolbar
 } from "@ionic/react";
-import {getCurrentDate, getCurrentDateKey} from "../../utils/Time-Utils";
 import {v4 as uuidv4} from 'uuid';
+import {AppMetaData} from "../../models/AppMetaData";
 
 
 function getCowImage(status: boolean) {
@@ -30,29 +30,27 @@ function getCowImage(status: boolean) {
 }
 
 interface HistoryProps {
-
+    metaData: AppMetaData
 }
 
-const HistoryTab: React.FC = () => {
-    const kk = getCurrentDateKey()
-    const current = getCurrentDate()
-    const derpData = {
-        kk: {
-            date: current,
-            night: false,
-            day: false
-        }
-    }
+const HistoryTab: React.FC<HistoryProps> = (props) => {
 
-    const info = Object.values(derpData).map((val) => {
-        return (
-            <IonItem key={uuidv4()}>
-                <IonLabel>{val.date}</IonLabel>
-                {getCowImage(val.day)}
-                {getCowImage(val.night)}
-            </IonItem>
-        )
-    })
+    const [mappedArray, setMappedArray] = useState([])
+
+    useEffect(() => {
+        const info: any = Object.values(props.metaData.dailyHistoryMap).map((val: any) => {
+            return (
+                <IonItem key={uuidv4()}>
+                    <IonLabel>{val.date}</IonLabel>
+                    {getCowImage(val.day)}
+                    {getCowImage(val.night)}
+                </IonItem>
+            )
+        })
+        setMappedArray(info)
+
+    }, [props.metaData.changeData])
+
 
     return (
         <IonPage>
@@ -63,15 +61,7 @@ const HistoryTab: React.FC = () => {
             </IonHeader>
             <IonContent>
                 <IonList>
-                    {info}
-                    <IonItem>
-                        <IonLabel>{getCurrentDate()}</IonLabel>
-                        <IonAvatar slot="end" className={'complete'}>
-                            <img src={require('../../pics/complete-cow.png')}/></IonAvatar>
-                        <IonAvatar slot="end" className={'not-complete'}>
-                            <img src={require('../../pics/non-complete-cow.png')}/>
-                        </IonAvatar>
-                    </IonItem>
+                    {mappedArray}
                 </IonList>
             </IonContent>
 
