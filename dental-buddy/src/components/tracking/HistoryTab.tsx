@@ -46,7 +46,7 @@ const HistoryTab: React.FC<HistoryProps> = (props) => {
                     {getCowImage(val.night)}
                 </IonItem>
             )
-        })
+        }).reverse()
         setMappedArray(info)
 
     }, [props.metaData.changeData])
